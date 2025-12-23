@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",   // REQUIRED
+    "paths": {
+      "@/*": ["./*"],
+      "@styles/*": ["public/styles/*"],
+      "@components/*": ["components/*"]
+    }
+  }
+}

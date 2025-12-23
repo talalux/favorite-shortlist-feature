@@ -1,0 +1,16 @@
+@mixin font-reg() {
+    font-family: 'Prompt';
+    font-weight: normal;
+}
+@mixin font-bold() {
+    font-family: 'Prompt';
+    font-weight: bold;
+}
+@mixin font-med() {
+    font-family: 'Prompt';
+    font-weight: 500;
+}
+@mixin font-light() {
+    font-family: 'Prompt';
+    font-weight: 300;
+}

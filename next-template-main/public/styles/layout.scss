@@ -1,0 +1,24 @@
+@use "core/_font-family";
+@use "core/fonts.scss";
+body{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.swiper{
+    display: flex;
+    position: relative;
+    .swiper-button-prev, .swiper-button-next{
+        min-width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        backdrop-filter: blur(35px);
+        background: #44444466;
+    }
+    .swiper-button-prev{
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 99;
+    }
+}
