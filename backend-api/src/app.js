@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const user = require("./routes/user.routes");
 const realEstate = require("./routes/realEstate.routes");
-const likes = require("./routes/likes.routes");
+const likes = require("./routes/likeEvent.routes");
 
 const app = express();
 app.use(cors());
