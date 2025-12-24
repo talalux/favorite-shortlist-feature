@@ -29,18 +29,29 @@ router.post("/create", async (req, res, next) => {
 });
 router.get("/list", async (req, res, next) => {
   try {
-    const { user_id } = req.query;
-    let sql = ``;
+    const { user_id, username, nickname } = req.query;
+    let condition = []
+    let param = []
     if(user_id){
-      sql = `WHERE u.user_id = ${user_id}`
+      condition.push("u.user_id LIKE ?")
+      param.push(`%${user_id}%`)
     }
+    if(username){
+      condition.push("u.username LIKE ?")
+      param.push(`%${username}%`)
+    }
+    if(nickname){
+      condition.push("u.nickname LIKE ?")
+      param.push(`%${nickname}%`)
+    }
+    let where = condition.length > 0 ? `WHERE ${condition.join(" OR ")}` : ""
     const [result] = await pool.query(
       `
         SELECT * 
         FROM user as u
-        ${sql}
+        ${where}
       `,
-      [user_id]
+      param
     );
     if(result.length > 0){
       res.status(200).json(

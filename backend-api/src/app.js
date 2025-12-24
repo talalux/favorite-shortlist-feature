@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const user = require("./routes/user.routes");
 const realEstate = require("./routes/realEstate.routes");
+const likes = require("./routes/likes.routes");
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.get("/health", (req, res) => res.json({ ok: true }));
 
 app.use("/api/user", user);
 app.use("/api/real_estate", realEstate);
+app.use("/api/likes", likes);
 
 app.use((err, req, res, next) => {
   console.error(err);
