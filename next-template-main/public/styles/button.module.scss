@@ -1,0 +1,21 @@
+@use "core/_font-family" as font;
+
+.main{
+    width: fit-content;
+    padding: 10px 15px;
+    // background-color: #000;
+    cursor: pointer;
+    .title{
+        text-align: center;
+        @include font.font-reg;
+        transition: .3s ease;
+    }
+    background-color: #fff;
+    transition: .3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    &:hover{
+        background-color: #333;
+        color: #fff;
+    }
+}
