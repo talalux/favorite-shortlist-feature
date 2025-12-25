@@ -7,8 +7,10 @@ import styles from "@styles/dropdown.module.scss";
 export default function Dropdown({
     label = "Select",
     options = [],
-    value,          // ⬅️ เพิ่ม
-    onSelect
+    value,
+    onSelect,
+    clearTrigger,     // ⬅️ NEW
+    onClear           // ⬅️ NEW (optional)
 }) {
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(null);
@@ -20,15 +22,21 @@ export default function Dropdown({
         if (onSelect) onSelect(item);
     };
 
-    // ⬅️ ตั้งค่า default จาก value
+    // ตั้งค่า default จาก value
     useEffect(() => {
         if (value !== undefined && options.length > 0) {
             const found = options.find(item => item.value == value);
-            if (found) {
-                setSelected(found);
-            }
+            setSelected(found || null);
         }
     }, [value, options]);
+
+    // ⬅️ clear dropdown เมื่อ clearTrigger เปลี่ยน
+    useEffect(() => {
+        if (clearTrigger !== undefined) {
+            setSelected(null);
+            if (onClear) onClear();
+        }
+    }, [clearTrigger]);
 
     // click outside
     useEffect(() => {
@@ -44,9 +52,7 @@ export default function Dropdown({
         window.addEventListener("click", clickOuter);
         return () => window.removeEventListener("click", clickOuter);
     }, []);
-    useEffect(() => {
-        console.log(selected);
-    },[selected])
+
     return (
         <div ref={refDropdown} className={styles.dropdown}>
             <button

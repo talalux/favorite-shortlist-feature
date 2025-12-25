@@ -26,6 +26,7 @@ const index = () => {
     const [loading, setLoading] = useState(true);
     const [selectUser, setSelectUser] = useState("");
     const [defaultDropdown, setDefaultDropdown] = useState("");
+    const [clearDropdown, setClearDropdown] = useState(undefined)
     const getListRealEstate = async (param) => {
         const res = await get(
             process.env.BASE_URL + "real_estate/list",
@@ -86,6 +87,10 @@ const index = () => {
         getListRealEstate(data)
         getUserList()
     },[]);
+    useEffect(() => {
+        if(!clearDropdown) return;
+        setClearDropdown(undefined);
+    },[clearDropdown])
     return (
         <div className={style.main}>
             <div className={style.inner}>
@@ -102,6 +107,7 @@ const index = () => {
                         setLoading(true);
                         getListRealEstate(data)
                     }}
+                    clearTrigger={clearDropdown}
                     value={defaultDropdown}
                 />
                 {/* <div className={style.button_wrapper}>
@@ -119,9 +125,11 @@ const index = () => {
                         theme={'red'}
                         title={"Clear User"} onClick={() => {
                         localStorage.removeItem("user_id")
+                        setClearDropdown(true)
                         setLoading(true);
                         let data = filter;
                         delete data["user_id"];
+                        delete data["filter_favorite"];
                         getListRealEstate(data)
                         setDefaultDropdown("")
                     }}/>
