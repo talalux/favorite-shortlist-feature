@@ -24,13 +24,9 @@ const index = () => {
     const [userList, setUserList] = useState([]);
     const [listCard, setListCard] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectUser, setSelectUser] = useState({});
+    const [selectUser, setSelectUser] = useState("");
     const [defaultDropdown, setDefaultDropdown] = useState("");
     const getListRealEstate = async (param) => {
-        let findUserId = localStorage.getItem("user_id");
-        console.log(findUserId);
-        console.log('findUserId');
-        
         const res = await get(
             process.env.BASE_URL + "real_estate/list",
             {
@@ -39,13 +35,15 @@ const index = () => {
                     location: param.location,
                     price: param.price,
                     limit: param.limit,
-                    user_id: findUserId
+                    user_id: param.user_id,
+                    filter_favorite: param.filter_favorite ?? "F"
                 }
             }
         );
         if(res.status == "Success"){
             setListCard(res.data)
         }else{
+            alert(res.msg)
             setListCard([])
         }
         if(res){
@@ -76,16 +74,16 @@ const index = () => {
         // localStorage.setItem("user_id", info.value);
     }
     const submitUser = () => {
-        localStorage.setItem("user_id", selectUser.value);
-        setLoading(true);
-        getListRealEstate(filter)
+        
+        
     }
     useEffect(() => {
         let findUserId = localStorage.getItem("user_id");
-        console.log(findUserId,'=-=-=-');
-        
         setDefaultDropdown(findUserId)
-        getListRealEstate(filter)
+        setSelectUser(findUserId)
+        let data = filter
+        data["user_id"] = findUserId;
+        getListRealEstate(data)
         getUserList()
     },[]);
     return (
@@ -96,15 +94,37 @@ const index = () => {
                     options={userList}
                     onSelect={(item) => {
                         // setUser(item);
-                        setSelectUser(item)
+                        setSelectUser(item.value)
+                        let data = filter
+                        data["user_id"] = item.value;
+                        data["filter_favorite"] = "F";
+                        localStorage.setItem("user_id", item.value);
+                        setLoading(true);
+                        getListRealEstate(data)
                     }}
                     value={defaultDropdown}
                 />
-                <div className={style.button_wrapper}>
+                {/* <div className={style.button_wrapper}>
                     <Button title={"Select User"} onClick={() => {submitUser()}}/>
-                </div>
+                </div> */}
                 <div className={style.button_wrapper}>
-                    <Button title={"Filter With User"}/>
+                    <Button title={"Filter With User"} onClick={() => {
+                        let _data = filter
+                        _data["user_id"] = selectUser;
+                        _data["filter_favorite"] = "T";
+                        setLoading(true);
+                        getListRealEstate(_data)
+                    }}/>
+                    <Button 
+                        theme={'red'}
+                        title={"Clear User"} onClick={() => {
+                        localStorage.removeItem("user_id")
+                        setLoading(true);
+                        let data = filter;
+                        delete data["user_id"];
+                        getListRealEstate(data)
+                        setDefaultDropdown("")
+                    }}/>
                 </div>
                 {/* <Loading/> */}
             </div>
@@ -129,6 +149,8 @@ const index = () => {
                                 price={items.price}
                                 initialLike={items.count_like}
                                 uniq_id={items?.uniq_id}
+                                targetId={items.local_id}
+                                status={items?.like_status}
                             />
                         )
                     })

@@ -35,7 +35,7 @@ api.interceptors.response.use(
       "Something went wrong";
     return {
       code: error?.response?.code ?? 400,
-      msg: error?.response?.statusText ?? "not found.",
+      msg: error?.response?.data.msg ?? "not found.",
     };
   }
 );

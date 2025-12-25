@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import styles from "@styles/card.module.scss";
 import { post } from "@/public/utils/api";
+import { commas } from "@/public/utils/common";
 
 export default function RealEstateCard({
   image,
@@ -15,7 +16,7 @@ export default function RealEstateCard({
   status,
   targetId
 }) {
-  const [liked, setLiked] = useState(uniq_id ? true : false);
+  const [liked, setLiked] = useState(status == '1' ? true : false);
   const [likeCount, setLikeCount] = useState(initialLike);
   const [userId, setUserId] = useState("");
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function RealEstateCard({
         uniq_id: uniq_id
       }
     );
-    if(postLike.status == 200){
+    if(postLike.status == 'Success'){
       setLiked((prev) => !prev);
       setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
     }
@@ -55,7 +56,7 @@ export default function RealEstateCard({
       <div className={styles.content}>
         <h3 className={styles.title}>{title}</h3>
         <p className={styles.location}>{location}</p>
-        <p className={styles.price}>{price}</p>
+        <p className={styles.price}>฿ {commas(price,'2')}</p>
       </div>
     </div>
   );

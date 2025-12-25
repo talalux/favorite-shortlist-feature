@@ -27,7 +27,7 @@ router.post("/create", async (req, res, next) => {
 });
 router.get("/list", async (req, res, next) => {
   try {
-    const { title, location, price, limit, user_id } = req.query;
+    const { title, location, price, limit, user_id, filter_favorite } = req.query;
     let condition = [];
     let param = [];
     // if (!user_id) {
@@ -85,6 +85,7 @@ router.get("/list", async (req, res, next) => {
             SELECT COUNT(*) as count
             FROM likes as l
             WHERE l.target_id LIKE ?
+            AND l.like_status LIKE 1
           `,
             [items.local_id]
           );
@@ -99,11 +100,23 @@ router.get("/list", async (req, res, next) => {
               [items.local_id, user_id]
             );
             items["uniq_id"] = rsUUID[0] ? rsUUID[0].uniq_id : null;
+            items["like_status"] = rsUUID[0] ? rsUUID[0].like_status : "0";
           }
           items["count_like"] = rsLikes[0] ? rsLikes[0].count : null;
           return items
         })
       )
+      if(filter_favorite == "T"){
+        return res.status(400).json(
+          {
+            status: "Fail",
+            msg: "user_id is required.",
+            data: [],
+            total: total.total
+          }
+        );
+        result = result.filter(items => items.like_status == "1");
+      }
       res.status(200).json(
         {
           status: "Success",
