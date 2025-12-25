@@ -4,31 +4,49 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "@styles/dropdown.module.scss";
 
-export default function Dropdown({ label = "Select", options = [], onSelect }) {
+export default function Dropdown({
+    label = "Select",
+    options = [],
+    value,          // ⬅️ เพิ่ม
+    onSelect
+}) {
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(null);
-    const refDropdown = useRef()
+    const refDropdown = useRef(null);
+
     const handleSelect = (item) => {
         setSelected(item);
         setOpen(false);
         if (onSelect) onSelect(item);
     };
 
+    // ⬅️ ตั้งค่า default จาก value
+    useEffect(() => {
+        if (value !== undefined && options.length > 0) {
+            const found = options.find(item => item.value == value);
+            if (found) {
+                setSelected(found);
+            }
+        }
+    }, [value, options]);
+
+    // click outside
     useEffect(() => {
         const clickOuter = (e) => {
             if (
-            refDropdown.current &&
-            !refDropdown.current.contains(e.target)
+                refDropdown.current &&
+                !refDropdown.current.contains(e.target)
             ) {
-                setOpen(false)
+                setOpen(false);
             }
-        }
-        window.addEventListener("click", clickOuter)
-        return () => {
-            window.removeEventListener("click", clickOuter);
         };
-    }, [])
 
+        window.addEventListener("click", clickOuter);
+        return () => window.removeEventListener("click", clickOuter);
+    }, []);
+    useEffect(() => {
+        console.log(selected);
+    },[selected])
     return (
         <div ref={refDropdown} className={styles.dropdown}>
             <button
@@ -36,7 +54,9 @@ export default function Dropdown({ label = "Select", options = [], onSelect }) {
                 className={styles.trigger}
                 onClick={() => setOpen(!open)}
             >
-                <span className={styles.label}>{selected ? selected.title : label}</span>
+                <span className={styles.label}>
+                    {selected ? selected.title : label}
+                </span>
                 <span className={styles.arrow}>▾</span>
             </button>
 

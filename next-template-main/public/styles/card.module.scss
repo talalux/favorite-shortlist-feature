@@ -47,6 +47,10 @@
     &:hover {
         transform: scale(1.05);
     }
+    &.disable{
+        opacity: .5;
+        pointer-events: none;
+    }
 }
 
 .active {

@@ -1,0 +1,29 @@
+/* components/NoData.module.scss */
+@use "core/_font-family" as font;
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+    color: #666;
+}
+
+.icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.title {
+    @include font.font-med;
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.desc {
+    @include font.font-reg;
+    font-size: 14px;
+    color: #888;
+}

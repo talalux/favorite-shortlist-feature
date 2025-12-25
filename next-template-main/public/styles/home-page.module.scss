@@ -10,4 +10,17 @@
             margin-top: 20px;
         }
     }
+    .loading{
+        padding: 50px;
+        margin: auto;
+    }
+    .card_wrapper{
+        padding-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1280px;
+        justify-content: center;
+        margin: auto;
+        gap: 26.67px;
+    }
 }

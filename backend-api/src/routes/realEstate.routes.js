@@ -98,7 +98,7 @@ router.get("/list", async (req, res, next) => {
             `,
               [items.local_id, user_id]
             );
-            items["uuid"] = rsUUID[0] ? rsUUID[0].uniq_id : null;
+            items["uniq_id"] = rsUUID[0] ? rsUUID[0].uniq_id : null;
           }
           items["count_like"] = rsLikes[0] ? rsLikes[0].count : null;
           return items

@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+  baseURL: process.env.BASE_URL || "http://localhost:3000",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -27,11 +27,16 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
+    console.log(error);
+    
     const message =
       error.response?.data?.message ||
       error.message ||
       "Something went wrong";
-    return Promise.reject(new Error(message));
+    return {
+      code: error?.response?.code ?? 400,
+      msg: error?.response?.statusText ?? "not found.",
+    };
   }
 );
 

@@ -1,8 +1,9 @@
 // components/RealEstateCard.jsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "@styles/card.module.scss";
+import { post } from "@/public/utils/api";
 
 export default function RealEstateCard({
   image,
@@ -10,13 +11,33 @@ export default function RealEstateCard({
   price,
   location,
   initialLike = 0,
+  uniq_id,
+  status,
+  targetId
 }) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(uniq_id ? true : false);
   const [likeCount, setLikeCount] = useState(initialLike);
-
-  const handleLike = () => {
-    setLiked((prev) => !prev);
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+  const [userId, setUserId] = useState("");
+  useEffect(() => {
+    let findUserId = localStorage.getItem("user_id");
+    if(!findUserId) return;
+    setUserId(findUserId)
+  },[])
+  const handleLike = async () => {
+    if(userId == "" || !userId) return;
+    const postLike = await post(
+      process.env.BASE_URL+"likes/update",
+      {
+        user_id: userId,
+        target_id: targetId,
+        status: status == "1" ? "0" : "1",
+        uniq_id: uniq_id
+      }
+    );
+    if(postLike.status == 200){
+      setLiked((prev) => !prev);
+      setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+    }
   };
 
   return (
@@ -24,7 +45,7 @@ export default function RealEstateCard({
       <div className={styles.imageWrapper}>
         <img src={image} alt={title} />
         <button
-          className={`${styles.likeBtn} ${liked ? styles.active : ""}`}
+          className={`${styles.likeBtn} ${liked ? styles.active : ""} ${userId == "" || userId == null ? styles.disable : ''}`}
           onClick={handleLike}
         >
           ❤️ {likeCount}
